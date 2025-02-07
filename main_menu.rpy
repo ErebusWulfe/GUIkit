@@ -13,13 +13,13 @@
     # you can also use a defined image / layered image
     # if you don't need the overlay, replace it with a blank image (DO NOT DELETE THE FILE)
 
-    define mm_bg_zoom = 1
-    define mm_bg_xoffset = 0
-    define mm_bg_yoffset = 0
+    define mm_bg_zoom = 1 # zoom value for the background
+    define mm_bg_xoffset = 0 # horizontal adjustment
+    define mm_bg_yoffset = 0 # vertical adjustment
 
     # BUTTONS - adjustment values to the main menu buttons assets
 
-    define mm_button_zoom = 1
+    define mm_button_zoom = 1 # zoom value for the buttons
     define mm_button_xoffset = 0
     define mm_button_yoffset = 0
 
@@ -28,6 +28,7 @@
 
     define mm_version = False
     define project_version = "v0.01"
+    define config.version = project_version # DO NOT EDIT THIS LINE
 
     define mm_project_version_size = 24
     define mm_project_version_xalign = 1.0 # 0.0 for left, 0.5 for center, 1.0 for right
