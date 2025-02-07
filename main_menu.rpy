@@ -1,4 +1,4 @@
-﻿init -100:
+﻿init 100:
 
     ###################
     ## CONFIGURABLES ##
@@ -23,12 +23,14 @@
     define mm_button_xoffset = 0
     define mm_button_yoffset = 0
 
+    define mm_button_hover_sound = "<silence 0.0>" # put the audio path here (make sure the file extension is correct)
+    define mm_button_activate_sound = "<silence 0.0>" # example "audio/click.ogg"
+
     # VERSION - version text configuration (overrides the configuration in "options.rpy")
     # if you want to display the project version on main menu, set "mm_version" to True
 
-    define mm_version = False
-    define project_version = "v0.01"
-    define config.version = project_version # DO NOT EDIT THIS LINE
+    define mm_version = True
+    define config.version = "v0.01"
 
     define mm_project_version_size = 24
     define mm_project_version_xalign = 1.0 # 0.0 for left, 0.5 for center, 1.0 for right
@@ -58,6 +60,15 @@
         xoffset mm_button_xoffset
         yoffset mm_button_yoffset
 
+    style mm_buttons:
+        hover_sound mm_button_hover_sound
+        activate_sound mm_button_activate_sound
+        focus_mask True
+
+    #transform mm_button_sfx:
+    #    hover_sound "mm_button_hover_sound"
+    #    activate_sound "mm_button_activate_sound"
+
     # VERSION
     
     style mm_project_version:
@@ -80,31 +91,31 @@
                 if main_menu:
 
                     # Start
-                    imagebutton auto "gui/button/mm_start_%s.png" focus_mask True at mm_button_adjust action Start()
+                    imagebutton auto "gui/button/mm_start_%s.png" style "mm_buttons" at mm_button_adjust action Start()
                     
                     # Load
-                    imagebutton auto "gui/button/mm_load_%s.png" focus_mask True at mm_button_adjust action ShowMenu("load")
+                    imagebutton auto "gui/button/mm_load_%s.png" style "mm_buttons" at mm_button_adjust action ShowMenu("load")
                     
                     # Preferences
-                    imagebutton auto "gui/button/mm_pref_%s.png" focus_mask True at mm_button_adjust action ShowMenu("preferences")
+                    imagebutton auto "gui/button/mm_pref_%s.png" style "mm_buttons" at mm_button_adjust action ShowMenu("preferences")
                     
                     # About
-                    imagebutton auto "gui/button/mm_about_%s.png" focus_mask True at mm_button_adjust action ShowMenu("about")
+                    imagebutton auto "gui/button/mm_about_%s.png" style "mm_buttons" at mm_button_adjust action ShowMenu("about")
 
                     ### Help - this menu is not necessary on Android
                     if renpy.variant("pc") or (renpy.variant("web") and not renpy.variant("mobile")):
-                        imagebutton auto "gui/button/mm_help_%s.png" focus_mask True at mm_button_adjust action ShowMenu("help")
+                        imagebutton auto "gui/button/mm_help_%s.png" style "mm_buttons" at mm_button_adjust action ShowMenu("help")
 
                     ### Quit - this button is banned on iOS and unnecessary on Android and Web
                     if renpy.variant("pc"):
-                        imagebutton auto "gui/button/mm_quit_%s.png" focus_mask True at mm_button_adjust action Quit(confirm=not main_menu)
+                        imagebutton auto "gui/button/mm_quit_%s.png" style "mm_buttons" at mm_button_adjust action Quit(confirm=not main_menu)
 
                     ### used only in replay mode - sample assets are not provided
                     #if _in_replay:
-                    #    imagebutton auto "gui/button/mm_endreplay_%s.png" focus_mask True at mm_button_adjust action EndReplay(confirm=True)
+                    #    imagebutton auto "gui/button/mm_endreplay_%s.png" style "mm_buttons" at mm_button_adjust action EndReplay(confirm=True)
 
             vbox:
                 if mm_version:
                     style "mm_project_version"
-                    text "[project_version]":
+                    text "[config.version]":
                         size mm_project_version_size
