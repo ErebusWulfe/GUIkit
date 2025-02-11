@@ -23,7 +23,7 @@
 
     ### BUTTONS RECOLORING - adjustment values to the main menu buttons assets
 
-    define qm_color_mode = 1
+    define qm_color_mode = 0
 
     # change the color of the quick menu buttons with 3 options:
     # - mode 0 = no changes
