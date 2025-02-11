@@ -62,7 +62,7 @@
     # it is recommended to NOT use alternate coloring, unless you want to utilize the color change method below
     # in which case you should set your custom namebox as the alternate namebox
 
-    define s_namebox_colorreplace = False
+    define s_namebox_colorreplace = True
     # if "True", REPLACE the alternate namebox color with dynamic-coloring or "s_namebox_tint" value
     # if "False", change the alternate namebox color with hue rotation
 
@@ -176,7 +176,7 @@
     ## DIALOGUE SCREEN (SAY SCREEN) ##
     ##################################
 
-    screen say(who,what,who_color="#fff000"):
+    screen say(who,what):
 
         fixed:
             add s_dialogue_box at s_db_adjust
@@ -204,10 +204,11 @@
                 style "s_namebox"
                 if s_namebox_alternate:
                     if s_namebox_colorreplace:
-                        if "color" in renpy.last_say().who.who_args:
-                            background Frame(Transform(s_namebox_alt,matrixcolor=ColorizeMatrix(renpy.last_say().who.who_args["color"],renpy.last_say().who.who_args["color"])), s_namebox_border, tile=s_namebox_tile)
-                        else:
-                            background Frame(Transform(s_namebox_alt,matrixcolor=ColorizeMatrix(s_namebox_tint,s_namebox_tint)), s_namebox_border, tile=s_namebox_tile)
+                        if type(renpy.last_say().who) is not str:
+                            if "color" in renpy.last_say().who.who_args:
+                                background Frame(Transform(s_namebox_alt,matrixcolor=ColorizeMatrix(renpy.last_say().who.who_args["color"],renpy.last_say().who.who_args["color"])), s_namebox_border, tile=s_namebox_tile)
+                            else:
+                                background Frame(Transform(s_namebox_alt,matrixcolor=ColorizeMatrix(s_namebox_tint,s_namebox_tint)), s_namebox_border, tile=s_namebox_tile)
                     else:
                         background Frame(Transform(s_namebox_alt,matrixcolor=HueMatrix(s_namebox_colorhue)*BrightnessMatrix(s_namebox_brightness)*SaturationMatrix(s_namebox_saturation)), s_namebox_border, tile=s_namebox_tile)
                 text who id "who":
