@@ -72,6 +72,7 @@
 
     ## == Color Change Mode A ==
     define s_namebox_tint = "#dc4200"
+    # COLORIZE the alternate namebox
 
     ## == Color Change Mode B ==
     define s_namebox_colorhue = 0 # change the hue color of alternate namebox using the hue rotation
@@ -83,7 +84,7 @@
     define s_namebox_saturation = 1 # change the saturation of alternate namebox
     # value is in 0 (grayscale) to 1 (unaltered saturation)
 
-    ## DUE TO HOW RENPY ENGINE WORK, YOU MAY HAVE TO TUNE UP HUE AND BRIGHTNESS TO GET THE SAME EFFECT FROM AN ACTUAL HUE SLIDER
+    ## DUE TO HOW REN'PY ENGINE WORKS, YOU MAY HAVE TO TUNE UP HUE AND BRIGHTNESS TO GET THE SAME EFFECT FROM AN ACTUAL HUE SLIDER
 
     ##########
 

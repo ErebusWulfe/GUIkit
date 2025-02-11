@@ -21,11 +21,62 @@
     # define mm_button_hover_sound = "<silence 0.0>"
     # by default the quick menu button SFX is set to SILENCE as it may cause too much distraction
 
+    ### BUTTONS RECOLORING - adjustment values to the main menu buttons assets
+
+    define qm_color_mode = 1
+
+    # change the color of the quick menu buttons with 3 options:
+    # - mode 0 = no changes
+    # - mode 1 = COLORIZE the buttons with a specific color
+    # - mode 2 = change the buttons color by changing its hue, brightness, and saturation
+
+    ## MODE 1
+    define qm_button_tint = "#4335ff"
+    # COLORIZE the quick menu buttons
+
+    ## MODE 2
+    define qm_button_colorhue = 0 # change the hue color of quick menu buttons using the hue rotation
+    # value is in 360 DEGREES, meaning 361 = 1, -10 = 350, etc.
+
+    define qm_button_brightness = 0 # change the saturation of quick menu buttons
+    # value is in -1 (darkest) to 1 (brightest); 0 is neutral
+
+    define qm_button_saturation = 1 # change the saturation of quick menu buttons
+    # value is in 0 (grayscale) to 1 (unaltered saturation)
+
+    ## DUE TO HOW REN'PY ENGINE WORKS, YOU MAY HAVE TO TUNE UP HUE AND BRIGHTNESS TO GET THE SAME EFFECT FROM AN ACTUAL HUE SLIDER
+
     ########################
     ## TRANSFORM & STYLES ##  SKIP THIS PART, YOU DON'T NEED TO DO ANYTHING HERE
     ########################
 
     # BUTTONS
+
+    init python:
+        def qm_color_check_0(*args):
+            if qm_color_mode == 0:
+                return None
+            else:
+                return 0
+        def qm_color_check_1(*args):
+            if qm_color_mode == 1:
+                return None
+            else:
+                return 0
+        def qm_color_check_2(*args):
+            if qm_color_mode == 2:
+                return None
+            else:
+                return 0
+
+    transform qm_button_color0:
+        matrixcolor SaturationMatrix(0)
+
+    transform qm_button_color1:
+        matrixcolor ColorizeMatrix(qm_button_tint,qm_button_tint)
+
+    transform qm_button_color2:
+        matrixcolor HueMatrix(qm_button_colorhue)*BrightnessMatrix(qm_button_brightness)*SaturationMatrix(qm_button_saturation)
 
     transform qm_button_adjust:
         zoom qm_button_zoom
@@ -33,6 +84,18 @@
         yalign 0.5
         xoffset qm_button_xoffset
         yoffset qm_button_yoffset
+
+        parallel:
+            function qm_color_check_0
+            qm_button_color0
+        parallel:
+            function qm_color_check_1
+            qm_button_color1
+        parallel:
+            function qm_color_check_2
+            qm_button_color2
+        
+        #qm_button_color1
 
     style qm_buttons:
         hover_sound qm_button_hover_sound
