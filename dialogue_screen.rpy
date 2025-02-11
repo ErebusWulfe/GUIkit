@@ -62,7 +62,7 @@
     # it is recommended to NOT use alternate coloring, unless you want to utilize the color change method below
     # in which case you should set your custom namebox as the alternate namebox
 
-    define s_namebox_colorreplace = True
+    define s_namebox_colorreplace = False
     # if "True", REPLACE the alternate namebox color with dynamic-coloring or "s_namebox_tint" value
     # if "False", change the alternate namebox color with hue rotation
 
@@ -221,18 +221,17 @@
                     xalign s_namebox_text_alignment
 
                     offset (s_namebox_text_xoffset,s_namebox_text_yoffset)
-
-            window:
-                if s_namebox_colorreplace and s_namebox_dynamiccolor:
+            
+            if s_namebox_colorreplace and s_namebox_dynamiccolor:
+                window:
                     style "s_namebox"
                     background None
-                    if "color" in renpy.last_say().who.who_args:
-                        text who:
-                            font s_namebox_text_font
-                            color s_namebox_text_color_alt
-                            size s_namebox_text_size
-                            kerning s_namebox_text_kerning
-                            xalign s_namebox_text_alignment
+                    text who:
+                        font s_namebox_text_font
+                        color s_namebox_text_color_alt
+                        size s_namebox_text_size
+                        kerning s_namebox_text_kerning
+                        xalign s_namebox_text_alignment
 
         ## SIDE IMAGE        
         add SideImage() xalign 0.0 yalign 1.0
