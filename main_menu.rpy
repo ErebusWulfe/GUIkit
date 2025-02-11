@@ -4,29 +4,34 @@
     ## CONFIGURABLES ##
     ###################
 
-    # BACKGROUND - adjustment values to the main menu background
+    ### BACKGROUND - adjustment values to the main menu background
 
     define gui.main_menu_background = "gui/main_menu.png"
     define gui.main_menu_overlay = "gui/overlay/main_menu_overlay.png"
 
     # set the background image and overlay, MAKE SURE THE PATH AND FILE EXTENSION IS CORRECT
     # you can also use a defined image / layered image
-    # if you don't need the overlay, replace it with a blank image (DO NOT DELETE THE FILE)
+
+    default mm_overlay = True # shows overlay if set to True
 
     define mm_bg_zoom = 1 # zoom value for the background
     define mm_bg_xoffset = 0 # horizontal adjustment
     define mm_bg_yoffset = 0 # vertical adjustment
 
-    # BUTTONS - adjustment values to the main menu buttons assets
+    ### BUTTONS - adjustment values to the main menu buttons assets
 
     define mm_button_zoom = 1 # zoom value for the buttons
     define mm_button_xoffset = 0
     define mm_button_yoffset = 0
 
-    define mm_button_hover_sound = "<silence 0.0>" # put the audio path here (make sure the file extension is correct)
-    define mm_button_activate_sound = "<silence 0.0>" # example "audio/click.ogg"
+    define mm_button_hover_sound = "<silence 0.0>" 
+    define mm_button_activate_sound = "<silence 0.0>"
 
-    # VERSION - version text configuration (overrides the configuration in "options.rpy")
+    # set the audio path (make sure the file extension is correct)
+    # if you don't want the sound effect, replace the audio with "<silence 0.0>"
+    # define mm_button_hover_sound = "<silence 0.0>"
+
+    ### VERSION - version text configuration (overrides the configuration in "options.rpy")
     # if you want to display the project version on main menu, set "mm_version" to True
 
     define mm_version = True
@@ -39,37 +44,29 @@
     define mm_project_version_yoffset = -20
 
     ########################
-    ## TRANSFORM & STYLES ##  SKIP THIS PART, YOU DON'T NEED TO DO ANYTHING HERE
+    ## TRANSFORM & STYLES ##  SKIP THIS PART - YOU DON'T NEED TO DO ANYTHING HERE
     ########################
 
-    # BACKGROUND
+    ### BACKGROUND
 
     transform mm_bg_adjust:
         zoom mm_bg_zoom
-        xalign 0.5
-        yalign 0.5
-        xoffset mm_bg_xoffset
-        yoffset mm_bg_yoffset
+        align (0.5,0.5)
+        offset (mm_bg_xoffset,mm_bg_yoffset)
 
-    # BUTTONS
+    ### BUTTONS
 
     transform mm_button_adjust:
         zoom mm_button_zoom
-        xalign 0.5
-        yalign 0.5
-        xoffset mm_button_xoffset
-        yoffset mm_button_yoffset
+        align (0.5,0.5)
+        offset (mm_button_xoffset,mm_button_yoffset)
 
     style mm_buttons:
         hover_sound mm_button_hover_sound
         activate_sound mm_button_activate_sound
         focus_mask True
 
-    #transform mm_button_sfx:
-    #    hover_sound "mm_button_hover_sound"
-    #    activate_sound "mm_button_activate_sound"
-
-    # VERSION
+    ### VERSION
     
     style mm_project_version:
         align (mm_project_version_xalign,mm_project_version_yalign)
@@ -79,12 +76,13 @@
     ## MAIN MENU SCREEN ##
     ######################
 
-
     screen main_menu():
         tag menu
 
         add gui.main_menu_background
-        add gui.main_menu_overlay
+
+        showif mm_overlay:
+            add gui.main_menu_overlay
 
         if renpy.get_screen("main_menu"):
             fixed:
