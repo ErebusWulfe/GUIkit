@@ -63,8 +63,12 @@
     # in which case you should set your custom namebox as the alternate namebox
 
     define s_namebox_colorreplace = True
-    # if "True", REPLACE the alternate namebox color with "s_namebox_tint" value
+    # if "True", REPLACE the alternate namebox color with dynamic-coloring or "s_namebox_tint" value
     # if "False", change the alternate namebox color with hue rotation
+
+    define s_namebox_dynamiccolor = True
+    # if "True", the namebox color will be replaced with "who_color" of each character, allowing you to have
+    # different namebox color for each character, instead of different character name colors 
 
     ## == Color Change Mode A ==
     define s_namebox_tint = "#dc4200"
@@ -199,7 +203,10 @@
                 style "s_namebox"
                 if s_namebox_alternate:
                     if s_namebox_colorreplace:
-                        background Frame(Transform(s_namebox_alt,matrixcolor=ColorizeMatrix(s_namebox_tint,s_namebox_tint)), s_namebox_border, tile=s_namebox_tile)
+                        if "color" in renpy.last_say().who.who_args:
+                            background Frame(Transform(s_namebox_alt,matrixcolor=ColorizeMatrix(renpy.last_say().who.who_args["color"],renpy.last_say().who.who_args["color"])), s_namebox_border, tile=s_namebox_tile)
+                        else:
+                            background Frame(Transform(s_namebox_alt,matrixcolor=ColorizeMatrix(s_namebox_tint,s_namebox_tint)), s_namebox_border, tile=s_namebox_tile)
                     else:
                         background Frame(Transform(s_namebox_alt,matrixcolor=HueMatrix(s_namebox_colorhue)*BrightnessMatrix(s_namebox_brightness)*SaturationMatrix(s_namebox_saturation)), s_namebox_border, tile=s_namebox_tile)
                 text who id "who":
@@ -213,6 +220,18 @@
                     xalign s_namebox_text_alignment
 
                     offset (s_namebox_text_xoffset,s_namebox_text_yoffset)
+
+            window:
+                if s_namebox_colorreplace and s_namebox_dynamiccolor:
+                    style "s_namebox"
+                    background None
+                    if "color" in renpy.last_say().who.who_args:
+                        text who:
+                            font s_namebox_text_font
+                            color s_namebox_text_color_alt
+                            size s_namebox_text_size
+                            kerning s_namebox_text_kerning
+                            xalign s_namebox_text_alignment
 
         ## SIDE IMAGE        
         add SideImage() xalign 0.0 yalign 1.0

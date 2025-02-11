@@ -24,8 +24,8 @@
     define mm_button_xoffset = 0
     define mm_button_yoffset = 0
 
-    define mm_button_hover_sound = "<silence 0.0>" 
-    define mm_button_activate_sound = "<silence 0.0>"
+    define mm_button_hover_sound = "audio/sfx/click1.ogg" 
+    define mm_button_activate_sound = "audio/sfx/click2.ogg"
 
     # set the audio path (make sure the file extension is correct)
     # if you don't want the sound effect, replace the audio with "<silence 0.0>"
