@@ -10,7 +10,9 @@
     define qm_button_xoffset = 0
     define qm_button_yoffset = 0
 
-    define qm_alternate_pos = False # positions the quick menu button on top right corner of the screen
+    define qm_alternate_pos = False
+    # "False" : standard quick menu layout (bottom-mid screen)
+    # "True" : positions the quick menu button on top right corner of the screen
     # if you use your own custom buttons, you may need to adjust the position of the buttons yourself
 
     define qm_button_hover_sound = "<silence 0.0>" 
@@ -103,12 +105,12 @@
         focus_mask True
     
     #######################
-    ## QUICK MENU SCREEN ##
+    ## QUICK MENU SCREEN ## DON'T EDIT UNLESS YOU WANT TO CUSTOMIZE IT ON YOUR OWN
     #######################
 
     screen quick_menu():
 
-        zorder 100
+        zorder 100 # makes sure it shows up above of other screens - DO NOT EDIT
 
         if quick_menu:
 

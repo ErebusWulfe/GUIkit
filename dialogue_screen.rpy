@@ -15,7 +15,7 @@
     # by default the dialogue box's transparency is set to 95%
     # set it to 1.0 if you have adjusted the textbox asset's transparency directly
 
-    define s_db_zoom = 1 # zoom value for the background
+    define s_db_zoom = 1 # zoom value for the dialogue box
 
     ## POSITIONING
     
@@ -56,19 +56,23 @@
     # set the main and alternate namebox image, MAKE SURE THE PATH AND FILE EXTENSION IS CORRECT
     # you can also use a defined image / layered image
 
-    ##########
+    ########## ALTERNATE COLOR
 
-    define s_namebox_alternate = True # use the alternate coloring of the namebox
+    define s_namebox_alternate = True
+    # "True"  : use the alternate coloring of the namebox
+    # "False" : disable alternate coloring
+
     # it is recommended to NOT use alternate coloring, unless you want to utilize the color change method below
     # in which case you should set your custom namebox as the alternate namebox
 
-    define s_namebox_colorreplace = True
-    # if "True", REPLACE the alternate namebox color with dynamic-coloring or "s_namebox_tint" value
-    # if "False", change the alternate namebox color with hue rotation
+    define s_namebox_colorreplace = False
+    # "True"  : REPLACE the alternate namebox color with dynamic-coloring or "s_namebox_tint" value
+    # "False" : change the alternate namebox color with hue rotation
 
-    define s_namebox_dynamiccolor = True
-    # if "True", the namebox color will be replaced with "who_color" of each character, allowing you to have
-    # different namebox color for each character, instead of different character name colors 
+    define s_namebox_dynamiccolor = False
+    # "True"  : the namebox color will be replaced with "who_color" of each character, allowing you to have
+    #           different namebox color for each character, instead of different character name colors
+    # "False" : disable namebox dynamic color
 
     ## == Color Change Mode A ==
     define s_namebox_tint = "#dc4200"
@@ -86,12 +90,12 @@
 
     ## DUE TO HOW REN'PY ENGINE WORKS, YOU MAY HAVE TO TUNE UP HUE AND BRIGHTNESS TO GET THE SAME EFFECT FROM AN ACTUAL HUE SLIDER
 
-    ##########
+    ########## SIZING
 
     define s_nb_alpha = 1.0
     # by default the namebox's transparency is set to 100%
 
-    define s_nb_zoom = 1 # zoom value for the background
+    define s_nb_zoom = 1 # zoom value for the namebox
 
     ## AUTO-SCALING - the namebox size will scale based on character's name
 
@@ -153,6 +157,9 @@
 
     ### NAMEBOX & TEXT
 
+    transform s_nb_adjust:
+        zoom s_nb_zoom
+
     transform namebox_color(col="#ffffff"):
         matrixcolor TintMatrix(col)
 
@@ -163,20 +170,20 @@
         align (s_nb_xalign,s_nb_yalign)
         offset (s_nb_xoffset,s_nb_yoffset)
 
-        background Frame(s_namebox, s_namebox_border, tile=s_namebox_tile)
+        background Frame(At(s_namebox,s_nb_adjust), s_namebox_border, tile=s_namebox_tile)
         padding s_namebox_padding
     
     style s_namebox_alt:
-        background Frame(s_namebox_alt, s_namebox_border, tile=s_namebox_tile)
+        background Frame(At(s_namebox_alt,s_nb_adjust), s_namebox_border, tile=s_namebox_tile)
 
     define nb_xoffset_default = -360
     define nb_yoffset_default = 0
 
     ##################################
-    ## DIALOGUE SCREEN (SAY SCREEN) ##
+    ## DIALOGUE SCREEN (SAY SCREEN) ## DON'T EDIT UNLESS YOU WANT TO CUSTOMIZE IT ON YOUR OWN
     ##################################
 
-    screen say(who,what):
+    screen say(who,what): # who = character name (if any) ; what = dialogue text
 
         fixed:
             add s_dialogue_box at s_db_adjust
@@ -206,11 +213,13 @@
                     if s_namebox_colorreplace:
                         if type(renpy.last_say().who) is not str:
                             if "color" in renpy.last_say().who.who_args:
-                                background Frame(Transform(s_namebox_alt,matrixcolor=ColorizeMatrix(renpy.last_say().who.who_args["color"],renpy.last_say().who.who_args["color"])), s_namebox_border, tile=s_namebox_tile)
+                                background Frame(Transform(At(s_namebox_alt,s_nb_adjust),matrixcolor=ColorizeMatrix(renpy.last_say().who.who_args["color"],renpy.last_say().who.who_args["color"])), s_namebox_border, tile=s_namebox_tile)
                             else:
-                                background Frame(Transform(s_namebox_alt,matrixcolor=ColorizeMatrix(s_namebox_tint,s_namebox_tint)), s_namebox_border, tile=s_namebox_tile)
+                                background Frame(Transform(At(s_namebox_alt,s_nb_adjust),matrixcolor=ColorizeMatrix(s_namebox_tint,s_namebox_tint)), s_namebox_border, tile=s_namebox_tile)
+                        else:
+                            background Frame(Transform(At(s_namebox_alt,s_nb_adjust),matrixcolor=ColorizeMatrix(s_namebox_tint,s_namebox_tint)), s_namebox_border, tile=s_namebox_tile)
                     else:
-                        background Frame(Transform(s_namebox_alt,matrixcolor=HueMatrix(s_namebox_colorhue)*BrightnessMatrix(s_namebox_brightness)*SaturationMatrix(s_namebox_saturation)), s_namebox_border, tile=s_namebox_tile)
+                        background Frame(Transform(At(s_namebox_alt,s_nb_adjust),matrixcolor=HueMatrix(s_namebox_colorhue)*BrightnessMatrix(s_namebox_brightness)*SaturationMatrix(s_namebox_saturation)), s_namebox_border, tile=s_namebox_tile)
                 text who id "who":
                     font s_namebox_text_font
                     if s_namebox_alternate:
