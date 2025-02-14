@@ -58,7 +58,7 @@
 
     ########## ALTERNATE COLOR
 
-    define s_namebox_alternate = True
+    define s_namebox_alternate = False
     # "True"  : use the alternate coloring of the namebox
     # "False" : disable alternate coloring
 
@@ -211,13 +211,14 @@
                 style "s_namebox"
                 if s_namebox_alternate:
                     if s_namebox_colorreplace:
-                        if type(renpy.last_say().who) is not str:
-                            if "color" in renpy.last_say().who.who_args:
+                        if s_namebox_dynamiccolor:
+                            if (type(renpy.last_say().who) is not str) and ("color" in renpy.last_say().who.who_args):
                                 background Frame(Transform(At(s_namebox_alt,s_nb_adjust),matrixcolor=ColorizeMatrix(renpy.last_say().who.who_args["color"],renpy.last_say().who.who_args["color"])), s_namebox_border, tile=s_namebox_tile)
                             else:
                                 background Frame(Transform(At(s_namebox_alt,s_nb_adjust),matrixcolor=ColorizeMatrix(s_namebox_tint,s_namebox_tint)), s_namebox_border, tile=s_namebox_tile)
                         else:
                             background Frame(Transform(At(s_namebox_alt,s_nb_adjust),matrixcolor=ColorizeMatrix(s_namebox_tint,s_namebox_tint)), s_namebox_border, tile=s_namebox_tile)
+                    
                     else:
                         background Frame(Transform(At(s_namebox_alt,s_nb_adjust),matrixcolor=HueMatrix(s_namebox_colorhue)*BrightnessMatrix(s_namebox_brightness)*SaturationMatrix(s_namebox_saturation)), s_namebox_border, tile=s_namebox_tile)
                 text who id "who":

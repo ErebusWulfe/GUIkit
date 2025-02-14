@@ -21,8 +21,8 @@
     ### BUTTONS - adjustment values to the main menu buttons assets
 
     define mm_button_zoom = 1 # zoom value for the buttons
-    define mm_button_xoffset = 0
-    define mm_button_yoffset = 0
+    define mm_button_xoffset = 0 # horizontal position adjustment
+    define mm_button_yoffset = 0 # vertical position adjustment
 
     define mm_button_hover_sound = "audio/sfx/click1.ogg" 
     define mm_button_activate_sound = "audio/sfx/click2.ogg"
@@ -73,7 +73,7 @@
         offset (mm_project_version_xoffset,mm_project_version_yoffset)
 
     ######################
-    ## MAIN MENU SCREEN ##
+    ## MAIN MENU SCREEN ## DON'T EDIT UNLESS YOU WANT TO CUSTOMIZE IT ON YOUR OWN
     ######################
 
     screen main_menu():

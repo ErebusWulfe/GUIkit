@@ -23,11 +23,20 @@
     # define mm_button_hover_sound = "<silence 0.0>"
     # by default the quick menu button SFX is set to SILENCE as it may cause too much distraction
 
+    ### BUTTONS OVERLAY - an image overlay bellow the buttons, usually used for the buttons' "dock"
+
+    define qm_button_overlay_use = False # this image will not be interactable
+
+    define qm_button_overlay = "gui/overlay/quick_menu_overlay.png"
+    # set the quick menu overlay image, MAKE SURE THE PATH AND FILE EXTENSION IS CORRECT
+    # DO NOT delete the image even if you don't use it
+
     ### BUTTONS RECOLORING - adjustment values to the main menu buttons assets
 
     define qm_color_mode = 0
 
-    # change the color of the quick menu buttons with 3 options:
+    # change the color of the quick menu buttons with 3 options
+    # (THIS WILL NOT RECOLOR THE OVERLAY):
     # - mode 0 = no changes
     # - mode 1 = COLORIZE the buttons with a specific color
     # - mode 2 = change the buttons color by changing its hue, brightness, and saturation
@@ -72,7 +81,7 @@
                 return 0
 
     transform qm_button_color0:
-        matrixcolor SaturationMatrix(0)
+        matrixcolor SaturationMatrix(1)
 
     transform qm_button_color1:
         matrixcolor ColorizeMatrix(qm_button_tint,qm_button_tint)
@@ -120,6 +129,9 @@
                 if qm_alternate_pos:
                     ypos -0.925
                     xpos 0.38
+
+                showif qm_button_overlay_use:
+                    add qm_button_overlay
 
                 # Back
                 imagebutton auto "gui/button/qm_back_%s.png" style "qm_buttons" at qm_button_adjust action Rollback()
