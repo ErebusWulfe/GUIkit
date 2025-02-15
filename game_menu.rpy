@@ -35,11 +35,41 @@
     define overlay_pref_use = True
     define overlay_pref = "gui/game_menu/overlay_pref.png"
 
+    define overlay_save_use = True
+    define overlay_save = "gui/game_menu/overlay_save.png"
+
+    define overlay_load_use = True
+    define overlay_load = "gui/game_menu/overlay_load.png"
+
     define overlay_history_use = True
     define overlay_history = "gui/game_menu/overlay_history.png"
 
+    define overlay_about_use = True
+    define overlay_about = "gui/game_menu/overlay_about.png"
+
     define overlay_help_use = True
     define overlay_help = "gui/game_menu/overlay_help.png"
+
+    ##### RECOLOR - HUE MODE ####################################################################################
+    ### (does not recolor label and textbutton)
+
+    define gm_button_recolor_gamemenu = False # recolor game menu imagebuttons
+    define gm_button_recolor_gamemenuoverlay = False # recolor game menu overlays
+    # if you have custom assets, you most likely don't want these ones to be active
+
+    define gm_button_recolor_saveslot = False # recolor save slots
+    define gm_button_recolor_misc = False # recolor bars, sliders, etc.
+
+    define gm_button_colorhue = 80 # change the hue color of alternate namebox using the hue rotation
+    # value is in 360 DEGREES, meaning 361 = 1, -10 = 350, etc.
+
+    define gm_button_brightness = 0.5 # change the saturation of alternate namebox
+    # value is in -1 (darkest) to 1 (brightest); 0 is neutral
+
+    define gm_button_saturation = 1 # change the saturation of alternate namebox
+    # value is in 0 (grayscale) to 1 (unaltered saturation)
+
+    ## DUE TO HOW REN'PY ENGINE WORKS, YOU MAY HAVE TO TUNE UP HUE AND BRIGHTNESS TO GET THE SAME EFFECT FROM AN ACTUAL HUE SLIDER
 
     ### GENERAL CONTENT - adjustments for game menu content
 
@@ -96,6 +126,46 @@
     define gm_pref_yoffset = gm_menu_yoffset # additional vertical position adjustment
 
     #################
+    ##### SAVE & LOAD
+
+    define gm_save_xsize = gm_menu_xsize # horizontal size of the help menu content (within game menu base)
+    define gm_save_ysize = gm_menu_ysize # vertical size of the help menu content (within game menu base)
+
+    define gm_save_xoffset = gm_menu_xoffset # additional horizontal position adjustment
+    define gm_save_yoffset = 50 # additional vertical position adjustment
+
+    define sv_date_size = 20 # size of save files date details
+    define sv_date_yoffset = 20 # vertical adjustment, useful to help position the date against the save slots
+
+    define sv_slot_cols = 3 # number of save slot columns (horizontal)
+    define sv_slot_rows = 2 # number of save slot rows (vertical)
+
+    define sv_slot_zoom = 0.9 # resize BOTH the save slot frame and screenshot
+
+    define sv_slot_xsize = 414 # save slot width
+    define sv_slot_ysize = 309 # save slot height
+    # total size of "slot_idle_background" and "slot_hover background" that will be displayed,
+    # including any borders or decorations
+    # NOT to be mistaken by the size of a save slot in-game screenshot
+    
+    define sv_slot_spacing_equal = False
+    # "True" : use "sv_slot_spacing" value to space file slots equally in horizontal and vertical direction
+    # "False" : use "sv_slot_spacing_x" and "sv_slot_spacing_y" to space the file slots
+
+    define sv_slot_spacing = 15 # spacing between save slots
+    define sv_slot_spacing_x = 25 # horizontal spacing, if equal spacing is not on
+    define sv_slot_spacing_y = 0 # vertical spacing, if equal spacing is not on
+    # to make the spice tighter, you can use negative number
+
+    define sv_screenshot_xsize = 385 # minimum screenshot width
+    define sv_screenshot_ysize = 242 # minimum screenshot height
+
+    define sv_screenshot_xoffset = -2 # horizontal position adjustment
+    define sv_screenshot_yoffset = 0 # vertical position adjustment
+    # use this to place the save screenshot in a correct placement
+
+
+    #################
     ##### HISTORY
 
     define gui.history_allow_tags = { "alt", "noalt", "rt", "rb", "art" }
@@ -125,6 +195,32 @@
     define gm_history_log_spacing = 75 # spacing between a set of history log entry (character name, dialogue, divider)
     define gm_history_log_xoffset = -150 # additional horizontal position for history log entry
     
+    #################
+    ##### ABOUT SCREEN
+
+    define gm_about_xsize = 1300 # horizontal size of the help menu content (within game menu base)
+    define gm_about_ysize = gm_menu_ysize # vertical size of the help menu content (within game menu base)
+
+    define gm_about_xoffset = gm_menu_xoffset # additional horizontal position adjustment
+    define gm_about_yoffset = 0 # additional vertical position adjustment
+
+    ### content
+
+    ## Text that is placed on the game's about screen. Place the text between the
+    ## triple-quotes, and leave a blank line between paragraphs.
+
+    define gui.about = _p("""GUI script and assets template by {a=https://erebuswulfe.itch.io//}ErebusWulfe.{a}
+    """)
+
+
+    ## A short name for the game used for executables and directories in the built
+    ## distribution. This must be ASCII-only, and must not contain spaces, colons,
+    ## or semicolons.
+
+    ### build name
+
+    ##### define build.name =
+    # you can set the project / build name here, or set one in "options.rpy"
 
     #################
     ##### HELP SCREEN
@@ -161,6 +257,96 @@
 
     transform gm_overlay_adjust:
         alpha gm_overlay_alpha
+
+    ### RECOLORING
+
+    # hue coloring
+
+    init python:
+        def recolor_check_gm(*args):
+            if gm_button_recolor_gamemenu:
+                return None
+            else:
+                return 0
+
+    init python:
+        def recolor_check_overlay(*args):
+            if gm_button_recolor_gamemenuoverlay:
+                return None
+            else:
+                return 0
+
+    init python:
+        def recolor_check_sv(*args):
+            if gm_button_recolor_saveslot:
+                return None
+            else:
+                return 0
+
+    init python:
+        def recolor_check_misc(*args):
+            if gm_button_recolor_misc:
+                return None
+            else:
+                return 0
+
+    transform gm_button_recolor:
+        function recolor_check_gm
+        matrixcolor HueMatrix(gm_button_colorhue)*SaturationMatrix(gm_button_saturation)*BrightnessMatrix(gm_button_brightness)
+
+    transform gm_overlay_recolor:
+        function recolor_check_overlay
+        matrixcolor HueMatrix(gm_button_colorhue)*SaturationMatrix(gm_button_saturation)*BrightnessMatrix(gm_button_brightness)
+
+    transform sv_slot_recolor:
+        function recolor_check_sv
+        matrixcolor HueMatrix(gm_button_colorhue)*SaturationMatrix(gm_button_saturation)*BrightnessMatrix(gm_button_brightness)
+
+    transform gm_misc_recolor:
+        function recolor_check_misc
+        matrixcolor HueMatrix(gm_button_colorhue)*SaturationMatrix(gm_button_saturation)*BrightnessMatrix(gm_button_brightness)
+
+    # tint color
+
+    # misc styles coloring
+
+    style bar:
+        left_bar Frame(At("gui/bar/left.png",gm_misc_recolor), gui.bar_borders, tile=gui.bar_tile)
+        right_bar Frame(At("gui/bar/right.png",gm_misc_recolor), gui.bar_borders, tile=gui.bar_tile)
+
+    style vbar:
+        top_bar Frame(At("gui/bar/top.png",gm_misc_recolor), gui.vbar_borders, tile=gui.bar_tile)
+        bottom_bar Frame(At("gui/bar/bottom.png",gm_misc_recolor), gui.vbar_borders, tile=gui.bar_tile)
+
+    style scrollbar:
+        base_bar Frame(At("gui/scrollbar/horizontal_[prefix_]bar.png",gm_misc_recolor), gui.scrollbar_borders, tile=gui.scrollbar_tile)
+        thumb Frame(At("gui/scrollbar/horizontal_[prefix_]thumb.png",gm_misc_recolor), gui.scrollbar_borders, tile=gui.scrollbar_tile)
+
+    style vscrollbar:
+        base_bar Frame(At("gui/scrollbar/vertical_[prefix_]bar.png",gm_misc_recolor), gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+        thumb Frame(At("gui/scrollbar/vertical_[prefix_]thumb.png",gm_misc_recolor), gui.vscrollbar_borders, tile=gui.scrollbar_tile)
+
+    style slider:
+        base_bar Frame(At("gui/slider/horizontal_[prefix_]bar.png",gm_misc_recolor), gui.slider_borders, tile=gui.slider_tile)
+        thumb At("gui/slider/horizontal_[prefix_]thumb.png",gm_misc_recolor)
+
+    style vslider:
+        base_bar Frame("gui/slider/vertical_[prefix_]bar.png", gui.vslider_borders, tile=gui.slider_tile)
+        thumb At("gui/slider/vertical_[prefix_]thumb.png",gm_misc_recolor)
+
+    style frame:
+        background Frame(At("gui/frame.png",gm_misc_recolor), gui.frame_borders, tile=gui.frame_tile)
+
+    style radio_button:
+        foreground At("gui/button/radio_[prefix_]foreground.png",gm_misc_recolor)
+
+    style check_button:
+        foreground At("gui/button/check_[prefix_]foreground.png",gm_misc_recolor)
+
+    style choice_button:
+        hover_background At("gui/button/choice_hover_background.png",gm_misc_recolor)
+        idle_background At("gui/button/choice_idle_background.png",gm_misc_recolor)
+
 
     ### CONTENT
 
@@ -239,6 +425,48 @@
     style check_label_text is pref_label_text
     style check_button_text is pref_button_text
 
+    ##### SAVE & LOAD (sv)
+
+    transform sv_slot_adjust:
+        zoom sv_slot_zoom
+
+    transform sv_screenshot_adjust:
+        align (0.5,0.5)
+        offset(sv_screenshot_xoffset,sv_screenshot_yoffset)
+
+    style sv_button is gm_button
+    style sv_button_text is gm_button_text:
+        hover_color gm_textbutton_color_hover
+        idle_color gm_textbutton_color_idle
+        selected_color gm_textbutton_color_selected
+
+    style sv_name_text is gm_button_text:
+        size sv_date_size
+        hover_color gm_textbutton_color_hover
+        idle_color gm_textbutton_color_selected
+        xalign 0.5
+        text_align 0.5
+
+        yoffset sv_date_yoffset
+    style sv_time_text is sv_name_text
+
+    style slot_button is gm_button:
+        xysize (sv_slot_xsize,sv_slot_ysize)
+
+        hover_background At("gui/button/slot_hover_background.png",sv_slot_recolor)
+        idle_background At("gui/button/slot_idle_background.png",sv_slot_recolor)
+        insensitive_background At("gui/button/slot_insensitive_background.png",sv_slot_recolor)
+
+    style slot_button_text is gm_button_text
+
+    style sv_label is gm_label:
+        yalign 0.0
+    style sv_label_text is gm_label_text:
+        bold False
+        hover_color gm_textbutton_color_hover
+        idle_color gm_textbutton_color_selected
+        text_align 0.5
+
     ##### HISTORY (hs)
 
     style hs_text:
@@ -270,7 +498,34 @@
 
         text_align 0.0
 
+    ##### ABOUT (ab)
+
+    style about_label is gm_label
+    style about_label_text is gm_label_text:
+        size 40
+        text_align 0.0
+    style about_text is gm_text
+    style about_vbox:
+        spacing -70
+
+    ##### EXIT / CONFIRM (ex)
+
+    style confirm_frame is gui_frame:
+        background Frame([ "gui/confirm_frame.png", "gui/confirm.png"], gui.confirm_frame_borders, tile=gui.frame_tile)
+    style confirm_prompt is gui_prompt:
+        padding (20,20,20,20)
+    style confirm_prompt_text is gui_text
+    style confirm_button is gui_medium_button
+    style confirm_button_text is gm_button_text
+    style confirm_label_text is gm_label_text
+
+
     ### BUTTONS
+
+    transform gm_button_adjust:
+        zoom 1
+        align (0.5,0.5)
+        offset (0,0)
         
     style gm_buttons:
         hover_sound gm_button_hover_sound
@@ -283,7 +538,7 @@
 
     #################### GAME MENU
 
-    screen game_menu(title, scroll=None, yinitial=0.0, spacing=0):
+    screen game_menu(title):
 
         # style_prefix "game_menu"
 
@@ -292,62 +547,25 @@
         else:
             add gui.game_menu_background
 
-        add gui.game_menu_overlay at gm_overlay_adjust
+        add gui.game_menu_overlay at gm_overlay_adjust, gm_overlay_recolor
         add gui.game_menu_base at gm_base_adjust
 
-        fixed:
-            
-            align (0.5,0.5)
-            fixed:
-                if scroll == "viewport":
-                    viewport:
-                        yinitial yinitial
-                        scrollbars "vertical"
-                        mousewheel True
-                        draggable True
-                        pagekeys True
-
-                        side_yfill True
-
-                        vbox:
-                            spacing spacing
-                            transclude
-
-                elif scroll == "vpgrid":
-
-                    vpgrid:
-                        cols 1
-                        yinitial yinitial
-
-                        scrollbars "vertical"
-                        mousewheel True
-                        draggable True
-                        pagekeys True
-
-                        side_yfill True
-                        spacing spacing
-                        transclude
-                else:
-                    transclude
+        transclude
 
         ########## NAVIGATION
 
         fixed:
-            imagebutton auto "gui/button/gm_pref_%s.png" style "gm_buttons" at mm_button_adjust action ShowMenu("preferences")
-            imagebutton auto "gui/button/gm_save_%s.png" style "gm_buttons" at mm_button_adjust action ShowMenu("save")
-            imagebutton auto "gui/button/gm_load_%s.png" style "gm_buttons" at mm_button_adjust action ShowMenu("load")
-            imagebutton auto "gui/button/gm_history_%s.png" style "gm_buttons" at mm_button_adjust action ShowMenu("history")
-            imagebutton auto "gui/button/gm_help_%s.png" style "gm_buttons" at mm_button_adjust action ShowMenu("help")
-            imagebutton auto "gui/button/gm_exit_%s.png" style "gm_buttons" at mm_button_adjust action Show("confirmbutton")
+            imagebutton auto "gui/button/gm_pref_%s.png" style "gm_buttons" at gm_button_adjust,gm_button_recolor action ShowMenu("preferences")
+            imagebutton auto "gui/button/gm_save_%s.png" style "gm_buttons" at gm_button_adjust,gm_button_recolor action ShowMenu("save")
+            imagebutton auto "gui/button/gm_load_%s.png" style "gm_buttons" at gm_button_adjust,gm_button_recolor action ShowMenu("load")
+            if main_menu: # shows about button when on main menu, otherwise shows history button
+                imagebutton auto "gui/button/gm_about_%s.png" style "gm_buttons" at gm_button_adjust,gm_button_recolor action ShowMenu("about")
+            else:
+                imagebutton auto "gui/button/gm_history_%s.png" style "gm_buttons" at gm_button_adjust,gm_button_recolor action ShowMenu("history")
+            imagebutton auto "gui/button/gm_help_%s.png" style "gm_buttons" at gm_button_adjust,gm_button_recolor action ShowMenu("help")
+            imagebutton auto "gui/button/gm_exit_%s.png" style "gm_buttons" at gm_button_adjust,gm_button_recolor action Show("confirmbutton")
 
-        ########## NAVIGATION
-
-        textbutton _("Return"):
-            style "return_button"
-
-            action Return()
-
-        #label title
+            imagebutton auto "gui/button/gm_return_%s.png" style "gm_buttons" at gm_button_adjust,gm_button_recolor action Return()
 
         if main_menu:
             key "game_menu" action ShowMenu("main_menu")
@@ -359,11 +577,11 @@
 
         tag menu
 
-        use game_menu(_("Preferences"), scroll="viewport"):
+        use game_menu(_("Preferences")):
 
             fixed:
                 if overlay_pref_use:
-                    add overlay_pref
+                    add overlay_pref at gm_overlay_recolor
 
                 frame:
                     style_prefix "gm"
@@ -446,6 +664,131 @@
                                         style "mute_all_button"
 
     ####################################################################################################
+    ##### SAVE & LOAD
+
+    # save and load screens share the same layout but different utility
+    # the "actual" layout is set up in "file_slots" screen
+
+    screen save():
+        tag menu
+        use file_slots(_("Save"))
+        fixed:
+            if overlay_save_use:
+                    add overlay_save at gm_overlay_recolor
+
+    screen load():
+        tag menu
+        use file_slots(_("Load"))
+        fixed:
+            if overlay_load_use:
+                    add overlay_load at gm_overlay_recolor
+
+    screen file_slots(title):
+
+        default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
+
+        use game_menu(title):
+
+            frame:
+                style_prefix "gm"
+                xysize(gm_save_xsize,gm_save_ysize)
+                offset((config.screen_width-gm_save_xsize)/2 + gm_save_xoffset,(config.screen_height-gm_save_ysize)/2 + gm_save_yoffset)
+                #background Solid("#0091ff")
+
+                vbox:
+
+                    spacing 10
+
+                    ## this ensures the input will get the enter event before any of the buttons do
+                    order_reverse True
+
+                    ## the page name, which can be edited by clicking on a button
+                    button:
+                        style "sv_label"
+
+                        key_events True
+                        xalign 0.5
+                        action page_name_value.Toggle()
+
+                        input:
+                            style "sv_label_text"
+                            value page_name_value
+
+                    ## the grid of file slots
+
+                    grid sv_slot_cols sv_slot_rows:
+                        style_prefix "slot"
+
+                        xalign 0.5
+                        yalign 0.5
+
+                        if sv_slot_spacing_equal:
+                            spacing sv_slot_spacing
+                        else:
+                            xspacing sv_slot_spacing_x
+                            yspacing sv_slot_spacing_y
+
+                        for i in range(sv_slot_cols * sv_slot_rows):
+
+                            $ slot = i + 1
+
+                            button at sv_slot_adjust:
+                                action FileAction(slot)
+
+                                has vbox
+                                
+                                add FileScreenshot(slot) xysize(sv_screenshot_xsize,sv_screenshot_ysize) at sv_screenshot_adjust
+
+                                text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
+                                    style "sv_time_text"
+
+                                text FileSaveName(slot):
+                                    style "sv_name_text"
+
+                                key "save_delete" action FileDelete(slot)
+
+                    ## buttons to access other pages
+
+                    vbox:
+                        style_prefix "sv"
+
+                        xalign 0.5
+                        yalign 1.0
+
+                        hbox:
+                            xalign 0.5
+
+                            spacing gui.page_spacing
+
+                            textbutton _("<") action FilePagePrevious()
+                            key "save_page_prev" action FilePagePrevious()
+
+                            if config.has_autosave:
+                                textbutton _("{#auto_page}A") action FilePage("auto")
+
+                            if config.has_quicksave:
+                                textbutton _("{#quick_page}Q") action FilePage("quick")
+
+                            ## range(1, 10) gives the numbers from 1 to 9.
+                            for page in range(1, 10):
+                                textbutton "[page]" action FilePage(page)
+
+                            textbutton _(">") action FilePageNext()
+                            key "save_page_next" action FilePageNext()
+
+                        if config.has_sync:
+                            if CurrentScreenName() == "save":
+                                textbutton _("Upload Sync"):
+                                    action UploadSync()
+                                    xalign 0.5
+                                    yoffset -12
+                            else:
+                                textbutton _("Download Sync"):
+                                    action DownloadSync()
+                                    xalign 0.5
+                                    yoffset -12
+                                
+    ####################################################################################################
     ###### HISTORY
 
     screen history():
@@ -455,18 +798,16 @@
         ## Avoid predicting this screen, as it can be very large.
         predict False
 
-        use game_menu(_("History"), spacing=gui.history_spacing):
+        use game_menu(_("History")):
 
             fixed:
-                if overlay_help_use:
-                    add overlay_history
+                if overlay_history_use:
+                    add overlay_history at gm_overlay_recolor
                 frame:
                     style_prefix "gm"
                     xysize(gm_history_xsize,gm_history_ysize)
                     offset((config.screen_width-gm_history_xsize)/2 + gm_history_xoffset,(config.screen_height-gm_history_ysize)/2 + gm_history_yoffset)
                     #background Solid("#fff000")
-
-                    xalign 0.0
 
                     viewport:
                         xalign 0.0
@@ -553,7 +894,44 @@
                                                 xzoom 3.5
 
                             if not _history_list:
-                                label _("The dialogue history is empty.")
+                                label _("The dialogue history is empty."):
+                                    xalign 0.5
+                                    xoffset gm_history_log_xoffset
+
+    ####################################################################################################
+    ##### ABOUT
+
+    screen about():
+
+        tag menu
+
+        ## This use statement includes the game_menu screen inside this one. The
+        ## vbox child is then included inside the viewport inside the game_menu
+        ## screen.
+        use game_menu(_("About")):
+
+            style_prefix "about"
+
+            fixed:
+                if overlay_about_use:
+                    add overlay_about at gm_overlay_recolor
+                vbox:
+                    box_wrap True
+                    xysize(gm_about_xsize,gm_about_ysize)
+                    offset((config.screen_width-gm_about_xsize)/2 + gm_about_xoffset,(config.screen_height-gm_about_ysize)/2 + gm_about_yoffset)
+
+                    style_prefix "about"
+
+                    label "[config.name!t]":
+                        xalign 0.0
+                    text _("Version [config.version!t]\n"):
+                        size 24
+
+                    ## gui.about is usually set in THIS FILE
+                    if gui.about:
+                        text "[gui.about!t]\n"
+
+                    text _("Made with {a=https://www.renpy.org/}Ren'Py{/a} [renpy.version_only].\n\n[renpy.license!t]")
 
     ####################################################################################################
     ##### HELP
@@ -568,12 +946,11 @@
 
             fixed:
                 if overlay_help_use:
-                    add overlay_help
+                    add overlay_help at gm_overlay_recolor
                 frame:
                     style_prefix "gm"
                     xysize(gm_help_xsize,gm_help_ysize)
                     offset((config.screen_width-gm_help_xsize)/2 + gm_help_xoffset,(config.screen_height-gm_help_ysize)/2 + gm_help_yoffset)
-                    #background Solid("#fff000") # use this for debug / placement purposes
 
                     vbox:
                         xoffset -100
@@ -720,10 +1097,8 @@
     ##### EXIT
 
     screen confirmbutton():
-
         modal True
         zorder 999
-
         style_prefix "confirm"
         add "gui/overlay/confirm.png"
 
@@ -732,11 +1107,10 @@
                 xalign .5
                 yalign .5
                 spacing 45
-
                 label _("Any unsaved progress will be lost"):
                     style "confirm_prompt"
+                    text_color gm_text_color
                     xalign 0.5
-
                 hbox:
                     xalign 0.5
                     spacing 100
