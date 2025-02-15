@@ -672,121 +672,119 @@
     screen save():
         tag menu
         use file_slots(_("Save"))
-        fixed:
-            if overlay_save_use:
-                    add overlay_save at gm_overlay_recolor
 
     screen load():
         tag menu
         use file_slots(_("Load"))
-        fixed:
-            if overlay_load_use:
-                    add overlay_load at gm_overlay_recolor
-
+        
     screen file_slots(title):
 
         default page_name_value = FilePageNameInputValue(pattern=_("Page {}"), auto=_("Automatic saves"), quick=_("Quick saves"))
 
         use game_menu(title):
-
-            frame:
-                style_prefix "gm"
-                xysize(gm_save_xsize,gm_save_ysize)
-                offset((config.screen_width-gm_save_xsize)/2 + gm_save_xoffset,(config.screen_height-gm_save_ysize)/2 + gm_save_yoffset)
-                #background Solid("#0091ff")
-
-                vbox:
-
-                    spacing 10
-
-                    ## this ensures the input will get the enter event before any of the buttons do
-                    order_reverse True
-
-                    ## the page name, which can be edited by clicking on a button
-                    button:
-                        style "sv_label"
-
-                        key_events True
-                        xalign 0.5
-                        action page_name_value.Toggle()
-
-                        input:
-                            style "sv_label_text"
-                            value page_name_value
-
-                    ## the grid of file slots
-
-                    grid sv_slot_cols sv_slot_rows:
-                        style_prefix "slot"
-
-                        xalign 0.5
-                        yalign 0.5
-
-                        if sv_slot_spacing_equal:
-                            spacing sv_slot_spacing
-                        else:
-                            xspacing sv_slot_spacing_x
-                            yspacing sv_slot_spacing_y
-
-                        for i in range(sv_slot_cols * sv_slot_rows):
-
-                            $ slot = i + 1
-
-                            button at sv_slot_adjust:
-                                action FileAction(slot)
-
-                                has vbox
-                                
-                                add FileScreenshot(slot) xysize(sv_screenshot_xsize,sv_screenshot_ysize) at sv_screenshot_adjust
-
-                                text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
-                                    style "sv_time_text"
-
-                                text FileSaveName(slot):
-                                    style "sv_name_text"
-
-                                key "save_delete" action FileDelete(slot)
-
-                    ## buttons to access other pages
+            fixed:
+                if (title == (_("Save"))) and overlay_save_use:
+                    add overlay_save at gm_overlay_recolor
+                if (title == (_("Load"))) and overlay_load_use:
+                    add overlay_load at gm_overlay_recolor
+                
+                frame:
+                    style_prefix "gm"
+                    xysize(gm_save_xsize,gm_save_ysize)
+                    offset((config.screen_width-gm_save_xsize)/2 + gm_save_xoffset,(config.screen_height-gm_save_ysize)/2 + gm_save_yoffset)
 
                     vbox:
-                        style_prefix "sv"
 
-                        xalign 0.5
-                        yalign 1.0
+                        spacing 10
 
-                        hbox:
+                        ## this ensures the input will get the enter event before any of the buttons do
+                        order_reverse True
+
+                        ## the page name, which can be edited by clicking on a button
+                        button:
+                            style "sv_label"
+
+                            key_events True
                             xalign 0.5
+                            action page_name_value.Toggle()
 
-                            spacing gui.page_spacing
+                            input:
+                                style "sv_label_text"
+                                value page_name_value
 
-                            textbutton _("<") action FilePagePrevious()
-                            key "save_page_prev" action FilePagePrevious()
+                        ## the grid of file slots
 
-                            if config.has_autosave:
-                                textbutton _("{#auto_page}A") action FilePage("auto")
+                        grid sv_slot_cols sv_slot_rows:
+                            style_prefix "slot"
 
-                            if config.has_quicksave:
-                                textbutton _("{#quick_page}Q") action FilePage("quick")
+                            xalign 0.5
+                            yalign 0.5
 
-                            ## range(1, 10) gives the numbers from 1 to 9.
-                            for page in range(1, 10):
-                                textbutton "[page]" action FilePage(page)
-
-                            textbutton _(">") action FilePageNext()
-                            key "save_page_next" action FilePageNext()
-
-                        if config.has_sync:
-                            if CurrentScreenName() == "save":
-                                textbutton _("Upload Sync"):
-                                    action UploadSync()
-                                    xalign 0.5
-                                    yoffset -12
+                            if sv_slot_spacing_equal:
+                                spacing sv_slot_spacing
                             else:
-                                textbutton _("Download Sync"):
-                                    action DownloadSync()
-                                    xalign 0.5
-                                    yoffset -12
+                                xspacing sv_slot_spacing_x
+                                yspacing sv_slot_spacing_y
+
+                            for i in range(sv_slot_cols * sv_slot_rows):
+
+                                $ slot = i + 1
+
+                                button at sv_slot_adjust:
+                                    action FileAction(slot)
+
+                                    has vbox
+                                    
+                                    add FileScreenshot(slot) xysize(sv_screenshot_xsize,sv_screenshot_ysize) at sv_screenshot_adjust
+
+                                    text FileTime(slot, format=_("{#file_time}%A, %B %d %Y, %H:%M"), empty=_("empty slot")):
+                                        style "sv_time_text"
+
+                                    text FileSaveName(slot):
+                                        style "sv_name_text"
+
+                                    key "save_delete" action FileDelete(slot)
+
+                        ## buttons to access other pages
+
+                        vbox:
+                            style_prefix "sv"
+
+                            xalign 0.5
+                            yalign 1.0
+
+                            hbox:
+                                xalign 0.5
+
+                                spacing gui.page_spacing
+
+                                textbutton _("<") action FilePagePrevious()
+                                key "save_page_prev" action FilePagePrevious()
+
+                                if config.has_autosave:
+                                    textbutton _("{#auto_page}A") action FilePage("auto")
+
+                                if config.has_quicksave:
+                                    textbutton _("{#quick_page}Q") action FilePage("quick")
+
+                                ## range(1, 10) gives the numbers from 1 to 9.
+                                for page in range(1, 10):
+                                    textbutton "[page]" action FilePage(page)
+
+                                textbutton _(">") action FilePageNext()
+                                key "save_page_next" action FilePageNext()
+
+                            if config.has_sync:
+                                if CurrentScreenName() == "save":
+                                    textbutton _("Upload Sync"):
+                                        action UploadSync()
+                                        xalign 0.5
+                                        yoffset -12
+                                else:
+                                    textbutton _("Download Sync"):
+                                        action DownloadSync()
+                                        xalign 0.5
+                                        yoffset -12
                                 
     ####################################################################################################
     ###### HISTORY
@@ -807,7 +805,6 @@
                     style_prefix "gm"
                     xysize(gm_history_xsize,gm_history_ysize)
                     offset((config.screen_width-gm_history_xsize)/2 + gm_history_xoffset,(config.screen_height-gm_history_ysize)/2 + gm_history_yoffset)
-                    #background Solid("#fff000")
 
                     viewport:
                         xalign 0.0
